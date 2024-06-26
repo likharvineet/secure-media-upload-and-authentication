@@ -21,3 +21,5 @@
   - /models : contains db models
   - /routes : contains all the api routes
   - /utils : contains utilities (functionalities) which will be used more then one time. like uploading files, handling email,
+
+as connectDB() is a async function, it returns a promise. we use this promise in ./src/index.js for then() and catch()
