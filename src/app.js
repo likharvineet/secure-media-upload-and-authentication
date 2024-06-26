@@ -21,4 +21,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 // configure static
 app.use(express.static("public"));
 
+// config cookie-parser
+app.use(cookieParser());
+
 export { app };
