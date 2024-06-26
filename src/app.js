@@ -18,4 +18,7 @@ app.use(express.json({ limit: "16kb" }));
 // configure urlencoder ; extended: true -> we can pass nested objects
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
+// configure static
+app.use(express.static("public"));
+
 export { app };
