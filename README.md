@@ -9,6 +9,8 @@
 # Dir Structure
 
 - .env : to keep all envirnment variables
+- .prettierrc : contains prettier config
+- .prettierignore : contains list of files which we don't want to get formatted
 - /src : dir where we will keep our all files
   - index.js
   - app.js
