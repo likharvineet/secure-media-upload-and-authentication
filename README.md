@@ -13,3 +13,9 @@
   - index.js
   - app.js
   - constants.js
+  - /controllers : it contains all the functionality
+  - /db : contains db connection config
+  - /middlewares : code to run inbetween req and res. like validations
+  - /models : contains db models
+  - /routes : contains all the api routes
+  - /utils : contains utilities (functionalities) which will be used more then one time. like uploading files, handling email,
