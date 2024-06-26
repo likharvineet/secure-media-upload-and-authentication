@@ -2,6 +2,7 @@
   "name": "video-hosting-service",
   "version": "1.0.0",
   "description": "a video hosting service similar to youtube",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js"
