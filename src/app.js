@@ -11,4 +11,8 @@ app.use(
     credentials: true,
   })
 );
+
+// configure json limit
+app.use(express.json({ limit: "16kb" }));
+
 export { app };
