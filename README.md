@@ -23,3 +23,6 @@
   - /utils : contains utilities (functionalities) which will be used more then one time. like uploading files, handling email,
 
 as connectDB() is a async function, it returns a promise. we use this promise in ./src/index.js for then() and catch()
+
+-in userSchema, we don't use arrow function for the call back. as we know arrow fucntion is not good with giving the current context which is very important in this case. as we want to run the fucntion for the current value
+- jub hum bcrypt.hash likhte hai toh hume current context ki jaroorat hoti hai jiske liye hum arrow fucntino use nahi karte
