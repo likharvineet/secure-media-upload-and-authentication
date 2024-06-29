@@ -42,8 +42,15 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     username: username.toLowerCase(),
   });
-  // remove password and refresh token field form response
   // check for user creation
+  // remove password and refresh token field form response
+  // select me sab select hota hai toh -ve sign jispar laga hai voh chodkar baaki ke chize dega, matlab mujeh createdUser me password, and refresh token nahi milega
+  const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+  if (!createdUser) {
+    throw new ApiError(500, "Something went wrong while registering the user");
+  }
   // return res
 });
 
