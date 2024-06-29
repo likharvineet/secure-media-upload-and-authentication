@@ -1,11 +1,16 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   // Steps:
   // get user details from frontend
   const { fullName, email, username, password } = req.body;
-  console.table([fullName, email, username, password]);
   // validation - not empty
+  if (
+    [fullName, email, username, password].some((field) => field?.trim() === "")
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
   // check if user already exists: using username, email
   // check for images, check if avatar is passed
   // upload them to cloudinary, avatar
