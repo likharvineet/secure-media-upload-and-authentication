@@ -263,6 +263,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
+  // IMP: humne register me req.files liya hai qki hum middleware se multiple files (avatar, coverImage) le rahe the, but is case me hum sirf avatar hi le rahe hai
   const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is missing");
