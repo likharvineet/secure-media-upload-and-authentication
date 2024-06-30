@@ -11,7 +11,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
     const refereshToken = user.generateRefreshToken();
     user.refereshToken = refereshToken;
     await user.save({ validateBeforeSave: false });
-    return {accessToken, refereshToken}
+    return { accessToken, refereshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -105,6 +105,9 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credential");
   }
   // TODO: generate access and refresh token
+  const { accessToken, refereshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
   // TODO: send token and data to cookie securely
 });
 export { registerUser, loginUser };
