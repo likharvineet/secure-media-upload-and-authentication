@@ -8,10 +8,10 @@ const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
-    const refereshToken = user.generateRefreshToken();
-    user.refereshToken = refereshToken;
+    const refreshToken = user.generateRefreshToken();
+    user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-    return { accessToken, refereshToken };
+    return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -105,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credential");
   }
   // TODO: generate access and refresh token
-  const { accessToken, refereshToken } = await generateAccessAndRefreshTokens(
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
 
@@ -122,7 +122,7 @@ const loginUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refereshToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(
       new ApiResponse(
         200,
@@ -130,7 +130,7 @@ const loginUser = asyncHandler(async (req, res) => {
           user: loggedInUser,
           //NOTE: hum yaha isliye wapas access and refresh token bhej rahe hai agar user to frontend se isse set karna ho local storage me, jab user mobile app me kaam karta hai toh usse cookie ka access nahi hota toh aise case me hum ye karte hai
           accessToken,
-          refereshToken,
+          refreshToken,
         },
         "User logged In Successfully"
       )
@@ -142,7 +142,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: { refreshToken: undefined },
+      $unset: { refreshToken: 1 },
     },
     { new: true } // NOTE: if it is false then it will return old value which contains the refreshToken, and when it is true we get the new updated calue in which refreshToken is undefined
   );
