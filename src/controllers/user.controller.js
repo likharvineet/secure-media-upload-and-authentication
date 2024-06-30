@@ -185,5 +185,27 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   if (incomingRefreshToken !== user?.refreshToken) {
     throw new ApiError(401, "Refresh token is expored or used");
   }
+
+  // TODO: generate new tokens and send it to user
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  const { accessToken, newRefreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", newRefreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { accessToken, refreshToken: newRefreshToken },
+        "Access token refresh successfully"
+      )
+    );
 });
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
