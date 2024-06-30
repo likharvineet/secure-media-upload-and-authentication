@@ -71,6 +71,10 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   // steps:
   // TODO: get req body -> data
+  const { username, email, password } = req.body;
+  if (!username || !email) {
+    throw new ApiError(400, "username or email is required");
+  }
   // TODO: check username or email
   // TODO: check password
   // TODO: generate access and refresh token
