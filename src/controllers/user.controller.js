@@ -245,6 +245,19 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   if (!fullName || !email) {
     throw new ApiError(400, "All fields are required");
   }
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        fullName, // IMP: ES6 syntax
+        eamil,
+      },
+    },
+    { new: true }
+  ).select("-password");
+
+  
 });
 export {
   registerUser,
