@@ -108,6 +108,11 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refereshToken } = await generateAccessAndRefreshTokens(
     user._id
   );
+
+  // NOTE: hame user ko password and refreshToken nahi bhejna
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
   // TODO: send token and data to cookie securely
 });
 export { registerUser, loginUser };
