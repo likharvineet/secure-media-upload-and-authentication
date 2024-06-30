@@ -143,6 +143,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     {
       $set: { refreshToken: undefined },
     },
+    { new: true } // NOTE: if it is false then it will return old value which contains the refreshToken, and when it is true we get the new updated calue in which refreshToken is undefined
   );
 });
 export { registerUser, loginUser, logoutUser };
