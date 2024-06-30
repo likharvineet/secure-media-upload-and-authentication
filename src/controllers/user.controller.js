@@ -286,6 +286,29 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   ).select("-password");
 });
 
+const updateUserCoverImage = asyncHandler(async (req, res) => {
+  // IMP: humne register me req.files liya hai qki hum middleware se multiple files (avatar, coverImage) le rahe the, but is case me hum sirf avatar hi le rahe hai
+  const coverImageLocalPath = req.file?.path;
+  if (!coverImageLocalPath) {
+    throw new ApiError(400, "Cover Image file is missing");
+  }
+
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  if (!coverImage.url) {
+    throw new ApiError(400, "Error while uploading on cloudinary");
+  }
+
+  await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        coverImage: coverImage.url, //IMP: hame avatar ka pura object mil raha hai
+      },
+    },
+    { new: true }
+  ).select("-password");
+});
 export {
   registerUser,
   loginUser,
@@ -295,4 +318,5 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
+  updateUserCoverImage
 };
