@@ -323,6 +323,61 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   if (!username?.trim()) {
     throw new ApiError(400, "Username is missing");
   }
+
+  const channel = await User.aggregate([
+    {
+      $match: {
+        username: username?.toLowerCase(), //IMP: hamne saare username lowercase rakhe hai
+      },
+    },
+    {
+      $lookup: {
+        from: "subscriptions", // IMP: hame pata hai ki jab mongodb me save hota hai toh model lowercase me hota hai and plural form me hota hai
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+
+    {
+      $lookup: {
+        from: "subscriptions", // IMP: hame pata hai ki jab mongodb me save hota hai toh model lowercase me hota hai and plural form me hota hai
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedTo",
+      },
+    },
+    {
+      $addFields: {
+        subscribersCount: {
+          $size: "$subscribers", //NOTE: count documents
+        },
+        channelsSubscribedToCount: {
+          $size: "$subscribedTo", //NOTE: count documents
+        },
+        isSubscribed: {
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] }, // NOTE: $in object and array dono me check karta hai. subscribers me subscribe field hai jisme hame hamara _id check karna hai
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    // NOTE: yaha hum project ke liye likhege, project means mujhe kya kya chize return karni hai ya kya kya chize bhejni hai
+    {
+      $project: {
+        fullName: 1,
+        username: 1,
+        email: 1,
+        avatar: 1,
+        coverImage: 1,
+        subscribersCount: 1,
+        channelsSubscribedToCount: 1,
+        isSubscribed: 1,
+      },
+    },
+  ]);
 });
 export {
   registerUser,
