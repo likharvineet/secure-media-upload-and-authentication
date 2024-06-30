@@ -76,6 +76,12 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "username or email is required");
   }
   // TODO: check username or email
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (!user) {
+    throw new ApiError(404, "User does not exist");
+  }
   // TODO: check password
   // TODO: generate access and refresh token
   // TODO: send token and data to cookie securely
