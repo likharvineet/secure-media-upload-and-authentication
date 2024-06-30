@@ -180,5 +180,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(401, "Invalid refresh token");
   }
+
+  // TODO: check if the incomingRefreshToken belong to the same user
+  if (incomingRefreshToken !== user?.refreshToken) {
+    throw new ApiError(401, "Refresh token is expored or used");
+  }
 });
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
