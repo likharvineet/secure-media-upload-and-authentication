@@ -4,7 +4,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
 // NOTE: qki verifyJWT custom middleware hai, hame next pass karna hoga
-export const verifyJWT = asyncHandler(async (req, res, next) => {
+// IMP: qki res hamne kahi use nahi kiya toh hum produciton grade application me use _ se replace karte hai, joh bhi variable use nahi hota uske liye
+export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const token =
       req.cookies?.accessToken ||
@@ -25,6 +26,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid access token")
+    throw new ApiError(401, error?.message || "Invalid access token");
   }
 });
