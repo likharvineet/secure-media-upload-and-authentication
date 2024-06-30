@@ -216,6 +216,13 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   // NOTE: verifyJWT me hum req me user inject kar rahe hai, toh matlab mujhe req.user se loggin user ki details mil jaayegi
   const user = await User.findById(req.user?._id);
+
+  // TODO: check if the old password match with the stored password, humne isPasswordCorrect() user me inject kiya hai
+  // IMP: await isliye lagana padha qki isPasswordCorrect() method define karte time humne async use kiya tha
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Invalid old password");
+  }
 });
 export {
   registerUser,
