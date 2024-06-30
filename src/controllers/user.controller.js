@@ -83,6 +83,11 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User does not exist");
   }
   // TODO: check password
+  // hame isPasswordCorrect user(jisme humne User.findOne() save kiya hai) me milta hai na ki User me
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid user credential");
+  }
   // TODO: generate access and refresh token
   // TODO: send token and data to cookie securely
 });
