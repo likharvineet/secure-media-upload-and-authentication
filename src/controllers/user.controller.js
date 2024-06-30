@@ -4,6 +4,22 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    const refereshToken = user.generateRefreshToken();
+    user.refereshToken = refereshToken;
+    await user.save({ validateBeforeSave: false });
+    return {accessToken, refereshToken}
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Something went wrong while creating access and refresh token"
+    );
+  }
+};
+
 // qki hum iske andar db se communicate karege isliye hum async function use karege
 const registerUser = asyncHandler(async (req, res) => {
   // Steps:
