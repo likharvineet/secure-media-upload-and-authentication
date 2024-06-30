@@ -168,44 +168,51 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized Request");
   }
-  // NOTE: verify incomingFrefreshToken with Refresh token secret
-  const decodedToken = jwt.verify(
-    incomingRefreshToken,
-    process.env.REFRESH_TOKEN_SECRET
-  );
-
-  // TODO: get user data from refresh token id (qki hamne refresh token _id se generate ki hai toh main usme se _id decode kar sakta hu and us id se user find kar lunga)
-  const user = await User.findById(decodedToken?._id);
-
-  if (!user) {
-    throw new ApiError(401, "Invalid refresh token");
-  }
-
-  // TODO: check if the incomingRefreshToken belong to the same user
-  if (incomingRefreshToken !== user?.refreshToken) {
-    throw new ApiError(401, "Refresh token is expored or used");
-  }
-
-  // TODO: generate new tokens and send it to user
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
-  const { accessToken, newRefreshToken } = await generateAccessAndRefreshTokens(
-    user._id
-  );
-
-  return res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", newRefreshToken, options)
-    .json(
-      new ApiResponse(
-        200,
-        { accessToken, refreshToken: newRefreshToken },
-        "Access token refresh successfully"
-      )
+  try {
+    // NOTE: verify incomingFrefreshToken with Refresh token secret
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
     );
+
+    // TODO: get user data from refresh token id (qki hamne refresh token _id se generate ki hai toh main usme se _id decode kar sakta hu and us id se user find kar lunga)
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token");
+    }
+
+    // TODO: check if the incomingRefreshToken belong to the same user
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "Refresh token is expored or used");
+    }
+
+    // TODO: generate new tokens and send it to user
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    const { accessToken, newRefreshToken } =
+      await generateAccessAndRefreshTokens(user._id);
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken: newRefreshToken },
+          "Access token refresh successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(
+      401,
+      error?.message ||
+        "Invalid refresh token"
+    );
+  }
 });
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
