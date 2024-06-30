@@ -114,5 +114,26 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
   // TODO: send token and data to cookie securely
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refereshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+          //NOTE: hum yaha isliye wapas access and refresh token bhej rahe hai agar user to frontend se isse set karna ho local storage me, jab user mobile app me kaam karta hai toh usse cookie ka access nahi hota toh aise case me hum ye karte hai
+          accessToken,
+          refereshToken,
+        },
+        "User logged In Successfully"
+      )
+    );
 });
 export { registerUser, loginUser };
