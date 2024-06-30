@@ -174,8 +174,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET
   );
 
-  if (!decodedToken) {
-    throw new ApiError(401, "Unauthorized User")
-  }
+  // TODO: get user data from refresh token id (qki hamne refresh token _id se generate ki hai toh main usme se _id decode kar sakta hu and us id se user find kar lunga)
+  const user = await User.findById(decodedToken?._id);
 });
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
