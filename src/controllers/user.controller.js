@@ -176,5 +176,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
   // TODO: get user data from refresh token id (qki hamne refresh token _id se generate ki hai toh main usme se _id decode kar sakta hu and us id se user find kar lunga)
   const user = await User.findById(decodedToken?._id);
+
+  if (!user) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
 });
 export { registerUser, loginUser, logoutUser, refreshAccessToken };
