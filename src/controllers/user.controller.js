@@ -223,6 +223,28 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   if (!isPasswordCorrect) {
     throw new ApiError(400, "Invalid old password");
   }
+
+  // TODO: generate new password
+  // NOTE: humne user model me pre hook use kiya hai joh save hone par sun hota hai. and voh kahata hai ki agar passowrd modify ho raha hai tab main new password generate karunga
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false }); // NOTE: save karne se pahale main baaki ke field ko validate nahi karna chahata
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  // NOTE: qki hame verifyJWT se user mil raha hai toh hum ussi ko return kar dege
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullName, email } = req.body;
+  if (!fullName || !email) {
+    throw new ApiError(400, "All fields are required");
+  }
 });
 export {
   registerUser,
@@ -230,4 +252,6 @@ export {
   logoutUser,
   refreshAccessToken,
   changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
 };
