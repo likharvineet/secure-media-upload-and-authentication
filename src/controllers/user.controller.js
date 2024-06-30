@@ -208,11 +208,19 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    throw new ApiError(
-      401,
-      error?.message ||
-        "Invalid refresh token"
-    );
+    throw new ApiError(401, error?.message || "Invalid refresh token");
   }
 });
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  // NOTE: verifyJWT me hum req me user inject kar rahe hai, toh matlab mujhe req.user se loggin user ki details mil jaayegi
+  const user = await User.findById(req.user?._id);
+});
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+};
