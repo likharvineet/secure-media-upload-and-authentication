@@ -138,12 +138,25 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndUpdate(
+  // hame ise store karne ki jaroorat nahi
+  await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: { refreshToken: undefined },
     },
     { new: true } // NOTE: if it is false then it will return old value which contains the refreshToken, and when it is true we get the new updated calue in which refreshToken is undefined
   );
+
+  // TODO: clear cookies
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"));
 });
 export { registerUser, loginUser, logoutUser };
