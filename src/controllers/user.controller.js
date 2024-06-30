@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+// qki hum iske andar db se communicate karege isliye hum async function use karege
 const registerUser = asyncHandler(async (req, res) => {
   // Steps:
   // get user details from frontend
@@ -67,4 +68,12 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered Successfully"));
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+  // steps:
+  // TODO: get req body -> data
+  // TODO: check username or email
+  // TODO: check password
+  // TODO: generate access and refresh token
+  // TODO: send token and data to cookie securely
+});
+export { registerUser, loginUser };
