@@ -318,8 +318,12 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
-
-})
+  // NOTE: koi bhi channel ka naam hume uske url me milta hai
+  const { username } = req.params;
+  if (!username?.trim()) {
+    throw new ApiError(400, "Username is missing");
+  }
+});
 export {
   registerUser,
   loginUser,
@@ -330,5 +334,5 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  getUserChannelProfile
+  getUserChannelProfile,
 };
