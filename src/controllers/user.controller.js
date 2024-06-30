@@ -378,6 +378,17 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       },
     },
   ]);
+  // IMP: hame array return hota hai, hame pata hai ki [] ek truthy value hai toh isrf channel nahi but uski length dekhna hoga
+  if (!channel?.length) {
+    throw new ApiError(404, "Channel does not exists");
+  }
+
+  // IMP: aggregation pipeline array return karta hai, qki humne sirf ek hi condition par matach kiya hai toh hame ek hi user milega, isliye hum channel[0] send karege
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, channel[0], "User channel fetched successfully")
+    );
 });
 export {
   registerUser,
