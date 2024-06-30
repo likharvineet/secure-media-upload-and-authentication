@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   loginUser,
   logoutUser,
+  refreshAccessToken,
   registerUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -28,4 +29,5 @@ router.route("/login").post(loginUser);
 
 // Secure routes
 router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/refresh-token").post(refreshAccessToken); //NOTE: qki humne jwt controller me hi very kar liya hai isliye hume verifyJWT middleware call karne ki zaroorat nahi hai
 export default router;
