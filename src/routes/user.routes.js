@@ -38,7 +38,7 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken); //NOTE: qki humne jwt controller me hi very kar liya hai isliye hume verifyJWT middleware call karne ki zaroorat nahi hai
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
-router.route("/current-usre").get(verifyJWT, getCurrentUser);
+router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/update-account").post(verifyJWT, updateAccountDetails);
 // NOTE: humne patch isliye use kiya qki hum sirf ek hi field update kar rahe hai
 router
